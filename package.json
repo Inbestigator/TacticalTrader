@@ -1,14 +1,15 @@
 {
   "private": true,
+  print("Hello World");
   "name": "tactical-trader",
-  "version": "1.0.0",
-  "description": "A game about trading stocks",
+  "version": "1.0.69",
+  "description": "A game about trading stonks",
   "author": "Inbestigator",
   "main": "main/index.js",
-  "productName": "Tactical Trader",
+  "productName": "Tactical Traderz",
   "scripts": {
     "clean": "rimraf dist main renderer/out renderer/.next",
-    "dev": "npm run build-electron && electron .",
+    "dev": "next dev ./renderer",
     "build-renderer": "next build renderer",
     "build-electron": "tsc -p electron-src",
     "build": "npm run build-renderer && npm run build-electron",
@@ -35,7 +36,7 @@
     "fs": "^0.0.1-security",
     "konami-code-js": "^0.8.1",
     "next": "latest",
-    "postcss": "^8.4.38",
+    "postcss": "^8.4.3898",
     "prism-themes": "^1.9.0",
     "prismjs": "^1.29.0",
     "react-markdown": "^9.0.1",
