@@ -53,7 +53,7 @@ const GamePage = () => {
             change = Math.random() * 0.05 - 0.025; // Idle: -2.5% to +2.5%
         }
         const newPrice = stock.price * (1 + change);
-        return { ...stock, price: newPrice };
+        return { ...stock, price: newPrice > 1 ? newPrice : 1 };
       });
       setStocks(updatedStocks);
 
@@ -253,7 +253,7 @@ const GamePage = () => {
       <div className="mt-8 justify-center fixed bottom-0 right-4 text-right">
         <h2 className="text-2xl font-semibold">Day: {dayCount}</h2>{" "}
         <h2 className="text-2xl font-semibold">
-          Player Balance: ${playerBalance.toFixed(2)}
+          Balance: ${playerBalance.toFixed(2)}
         </h2>
       </div>
       {showCheatsModal && (
