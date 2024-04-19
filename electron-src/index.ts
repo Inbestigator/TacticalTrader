@@ -21,7 +21,7 @@ app.on("ready", async () => {
       preload: join(__dirname, "preload.js"),
     },
     center: true,
-    alwaysOnTop: true
+    alwaysOnTop: true,
   });
 
   mainWindow.setMenuBarVisibility(false);

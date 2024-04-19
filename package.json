@@ -5,7 +5,7 @@
   "description": "A game about trading stocks",
   "author": "Inbestigator",
   "main": "main/index.js",
-  "productName": "Tactical trader",
+  "productName": "Tactical Trader",
   "scripts": {
     "clean": "rimraf dist main renderer/out renderer/.next",
     "dev": "npm run build-electron && electron .",
@@ -48,7 +48,10 @@
     "files": [
       "main",
       "renderer/out"
-    ]
+    ],
+    "win": {
+      "icon": "build/icon.ico"
+    }
   },
   "license": "MIT",
   "copyright": {
