@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "tactical-trader",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A game about trading stocks",
   "author": "Inbestigator",
   "main": "main/index.js",

@@ -3,6 +3,8 @@ import { handleBuy, handleSell } from "../utils/stockUtils";
 import defaultStocks from "../utils/stocks";
 import Konami from "konami-code-js";
 import { useRouter } from "next/router";
+import StockCard from "../components/stockCard";
+import PortfolioCard from "../components/portfolioCard";
 
 const GamePage = () => {
   const router = useRouter();
@@ -30,7 +32,7 @@ const GamePage = () => {
         switch (weeklyTrend[stock.symbol]) {
           case "upward":
             if (Math.random() < 0.1) {
-              change = Math.random() * -0.15 - 0.1; // 10% chance to go down
+              change = Math.random() * -0.1 - 0.05; // 10% chance to go down
             } else {
               change = Math.random() * 0.1 + 0.05; // Upward trend: +5% to +15%
             }
@@ -39,21 +41,24 @@ const GamePage = () => {
             if (Math.random() < 0.1) {
               change = Math.random() * 0.1 + 0.05; // 10% chance to go up
             } else {
-              change = Math.random() * -0.15 - 0.1; // Downward trend: -10% to -25%
+              change = Math.random() * -0.1 - 0.05; // Downward trend: -10% to -25%
             }
             break;
           case "craze":
-            change = Math.random() * 0.5 + 0.5; // Craze: +50% to +100%
+            change = Math.random() * 0.2 + 0.3; // Craze: +30% to +50%
             break;
           case "recess":
-            change = Math.random() * -0.5 - 0.3; // Recess: -30% to -80%
+            change = Math.random() * -0.2 - 0.3; // Recess: -30% to -50%
             break;
           case "idle":
           default:
             change = Math.random() * 0.05 - 0.025; // Idle: -2.5% to +2.5%
         }
         const newPrice = stock.price * (1 + change);
-        return { ...stock, price: newPrice > 1 ? newPrice : 1 };
+        return {
+          ...stock,
+          price: newPrice > 1 ? (newPrice < 1000 ? newPrice : 1000) : 1,
+        };
       });
       setStocks(updatedStocks);
 
@@ -187,12 +192,18 @@ const GamePage = () => {
     }
   }
 
+  // Calculate net worth
+  const netWorth = portfolio.reduce(
+    (total, item) => total + item.price * item.quantity,
+    playerBalance
+  );
+
   return (
     <div className="container mx-auto">
       {showBanner && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-yellow-500 text-white p-8 rounded-lg">
-            <h2 className="text-elg font-semibold">
+        <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-yellow-500 text-white p-8 rounded-lg align-bottom">
+            <h2 className="text-elg font-semibold m-0">
               10x your savings in one year!
             </h2>
           </div>
@@ -201,63 +212,48 @@ const GamePage = () => {
       <h2 className="text-2xl font-semibold">Available Stocks</h2>
       <div className="grid grid-cols-3 gap-4">
         {displayedStocks.map((stock) => (
-          <div key={stock.symbol} className="card w-full">
-            <h2 className="text-xl font-semibold">{stock.name}</h2>
-            <p>Price: ${stock.price.toFixed(2)}</p>{" "}
-            {showMod && <p>Mod: {weeklyTrend[stock.symbol]}</p>}
-            <button
-              onClick={() =>
-                handleBuy(
-                  stocks,
-                  portfolio,
-                  setStocks,
-                  setPortfolio,
-                  playerBalance,
-                  setPlayerBalance,
-                  stock.symbol
-                )
-              }
-              className="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md"
-            >
-              Buy
-            </button>
-          </div>
+          <StockCard
+            key={stock.symbol}
+            stocks={stocks}
+            stock={stock}
+            portfolio={portfolio}
+            setStocks={setStocks}
+            setPortfolio={setPortfolio}
+            playerBalance={playerBalance}
+            setPlayerBalance={setPlayerBalance}
+            handleBuy={handleBuy}
+            showMod={showMod}
+            weeklyTrend={weeklyTrend}
+          ></StockCard>
         ))}
       </div>
-      <div className="mt-8">
+      <div className="mt-8 pb-14">
         <h2 className="text-2xl font-semibold">Portfolio</h2>
         <div className="grid grid-cols-3 gap-4">
           {portfolio.map((item) => (
-            <div key={item.symbol} className="card w-full">
-              <h3 className="text-xl font-semibold">{item.name}</h3>
-              <p>Price: ${item.price.toFixed(2)}</p>
-              <p>Quantity: {item.quantity}</p>
-              <button
-                onClick={() =>
-                  handleSell(
-                    portfolio,
-                    setPortfolio,
-                    playerBalance,
-                    setPlayerBalance,
-                    item.symbol
-                  )
-                }
-                className="bg-red-500 text-white px-4 py-2 mt-2 rounded-md"
-              >
-                Sell
-              </button>
-            </div>
+            <PortfolioCard
+              key={item.symbol}
+              item={item}
+              portfolio={portfolio}
+              setPortfolio={setPortfolio}
+              playerBalance={playerBalance}
+              setPlayerBalance={setPlayerBalance}
+              handleSell={handleSell}
+            ></PortfolioCard>
           ))}
         </div>
       </div>
-      <div className="mt-8 justify-center fixed bottom-0 right-4 text-right">
+      <div className="mt-8 justify-center fixed bottom-0 flex w-full gap-10 pt-2 stats inset-x-0">
         <h2 className="text-2xl font-semibold">Day: {dayCount}</h2>{" "}
         <h2 className="text-2xl font-semibold">
           Balance: ${playerBalance.toFixed(2)}
         </h2>
+        <h2 className="text-2xl font-semibold">
+          Net Worth: ${netWorth.toFixed(2)}
+        </h2>
       </div>
       {showCheatsModal && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex justify-center items-center">
           <div className="bg-white p-8 rounded-lg">
             <h2 className="text-xl font-semibold mb-4">Select Cheats</h2>
             <button
