@@ -244,7 +244,7 @@ const GamePage = () => {
         </div>
       </div>
       <div className="mt-8 justify-center fixed bottom-0 flex w-full gap-10 pt-2 stats inset-x-0">
-        <h2 className="text-2xl font-semibold">Day: {dayCount}</h2>{" "}
+        <h2 className="text-2xl font-semibold">Day: {dayCount}</h2>
         <h2 className="text-2xl font-semibold">
           Balance: ${playerBalance.toFixed(2)}
         </h2>
