@@ -1,3 +1,2 @@
-## A game made for CS
-
-[Itch page](https://inbestigator.itch.io/tacticaltrader)
+## A game made for CS class
+> [Itch page](https://inbestigator.itch.io/tacticaltrader)
